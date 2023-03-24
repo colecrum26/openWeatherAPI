@@ -1,23 +1,42 @@
-// TODO
-// Eventually this will be replaced with an element.value in an Input tag
 const apiKey = "5bfff3ebda0e0482eab8cdd3efecce1a";
 // TODO
+// Eventually this will be replaced with an element.value in an Input tag
 // city/state will eventually be replaced
-const cityName = "new+orleans";
-const state = "LA";
-const countryCode = "US";
+let cityName = "new+orleans";
+let state = "LA";
+let countryCode = "US";
 const limit = "5";
-const geoUrl = `http://api.openweathermap.org/geo/1.0/direct?q=${cityName},${state},${countryCode}&limit=${limit}&appid=${apiKey}`;
+let lat = "";
+let lon = "";
+let currentWeatherURL = "";
+let geoUrl = `http://api.openweathermap.org/geo/1.0/direct?q=${cityName},${state},${countryCode}&limit=${limit}&appid=${apiKey}`;
 
 async function getCityWeather(){
     let res = await fetch(geoUrl);
     let data = await res.json();
     let dataObj = data[0];
-    let lat = dataObj.lat;
-    let lon = dataObj.lon;
+    lat = dataObj.lat;
+    lon = dataObj.lon;
     let city = dataObj.name;
     let st = dataObj.state;
-    let country = dataObj.country
-    console.log(city, lat, lon, st, country);
+    let country = dataObj.country;
+    currentWeatherURL = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}`;
+    // console.log(currentWeatherURL);
+    // console.log(city, lat, lon, st, country);
+    getCurrentWeather();
+    let cityEl = document.getElementById("city-name");
+    cityEl.textContent = city;
 };
 getCityWeather();
+
+async function getCurrentWeather(){
+    let res = await fetch(currentWeatherURL);
+    let data = await res.json();
+    let dataObj = data;
+    console.log(currentWeatherURL);
+    console.log(dataObj);
+    let day1Icon = dataObj.weather[0].icon;
+    let iconURL = `https://openweathermap.org/img/wn/${day1Icon}@2x.png`
+    let day1IconId = document.getElementById("day1Icon");
+    day1IconId.src = iconURL;
+};
