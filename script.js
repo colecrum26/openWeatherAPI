@@ -36,7 +36,7 @@ async function getCurrentWeather(){
     console.log(currentWeatherURL);
     console.log(dataObj);
     let day1Icon = dataObj.weather[0].icon;
-    let iconURL = `https://openweathermap.org/img/wn/${day1Icon}@2x.png`
+    let iconURL = `https://openweathermap.org/img/wn/${day1Icon}@2x.png`;
     let day1IconId = document.getElementById("day1Icon");
     day1IconId.src = iconURL;
 };
