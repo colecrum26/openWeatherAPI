@@ -8,10 +8,10 @@ const countryId = document.getElementById("countryId");
 
 let cityName = cityId.value;
 let state = stateId.value;
-let countryCode = "";
+let countryCode = countryId.value;
 const limit = "5";
-let lat = "";
-let lon = "";
+// let lat = "";
+// let lon = "";
 let currentWeatherURL = "";
 let geoUrl = `http://api.openweathermap.org/geo/1.0/direct?q=${cityName},${state},${countryCode}&limit=${limit}&appid=${apiKey}`;
 
@@ -19,17 +19,22 @@ async function getCityWeather(){
     let res = await fetch(geoUrl);
     let data = await res.json();
     let dataObj = data[0];
-    lat = dataObj.lat;
-    lon = dataObj.lon;
+    console.log("made it this far");
+    let lat = dataObj.lat;
+    let lon = dataObj.lon;
     let city = dataObj.name;
     let st = dataObj.state;
     let country = dataObj.country;
     currentWeatherURL = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}`;
     // console.log(currentWeatherURL);
-    // console.log(city, lat, lon, st, country);
+    console.log(city, lat, lon, st, country);
     getCurrentWeather();
     let cityEl = document.getElementById("city-name");
     cityEl.textContent = city;
+    let stateEl = document.getElementById("state-name");
+    stateEl.textContent = st;
+    let countryEl = document.getElementById("country-name");
+    countryEl.textContent = country;
 };
 
 
