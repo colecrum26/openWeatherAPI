@@ -2,9 +2,13 @@ const apiKey = "5bfff3ebda0e0482eab8cdd3efecce1a";
 // TODO
 // Eventually this will be replaced with an element.value in an Input tag
 // city/state will eventually be replaced
-let cityName = "new+orleans";
-let state = "LA";
-let countryCode = "US";
+const cityId = document.getElementById("cityId");
+const stateId = document.getElementById("stateId");
+const countryId = document.getElementById("countryId");
+
+let cityName = cityId.value;
+let state = stateId.value;
+let countryCode = "";
 const limit = "5";
 let lat = "";
 let lon = "";
@@ -27,7 +31,7 @@ async function getCityWeather(){
     let cityEl = document.getElementById("city-name");
     cityEl.textContent = city;
 };
-getCityWeather();
+
 
 async function getCurrentWeather(){
     let res = await fetch(currentWeatherURL);
@@ -40,3 +44,10 @@ async function getCurrentWeather(){
     let day1IconId = document.getElementById("day1Icon");
     day1IconId.src = iconURL;
 };
+
+const form = document.getElementById("form");
+
+form.addEventListener("submit", (event) => {
+    event.preventDefault();
+    getCityWeather();
+})
