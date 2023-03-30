@@ -1,4 +1,5 @@
 const apiKey = "5bfff3ebda0e0482eab8cdd3efecce1a";
+let tempLoc
 // TODO
 
 async function getCityWeather(geoUrl) {
@@ -19,13 +20,14 @@ async function getCityWeather(geoUrl) {
   stateEl.textContent = st;
   let countryEl = document.getElementById("country-name");
   countryEl.textContent = country;
+  tempLoc = new SelectedLocation(city, country)
 }
 
 async function getCurrentWeather(currentWeatherURL) {
   let res = await fetch(currentWeatherURL);
   let dataW = await res.json();
   console.log(dataW)
-  let temp = dataW.weather[0].description;
+  let temp = dataW.main.temp;
   console.log(currentWeatherURL);
   let day1Icon = dataW.weather[0].icon;
   let iconURL = `https://openweathermap.org/img/wn/${day1Icon}@2x.png`;
@@ -33,6 +35,9 @@ async function getCurrentWeather(currentWeatherURL) {
   day1IconId.src = iconURL;
   let tempEl = document.getElementById("city-temps");
   tempEl.textContent = temp;
+  tempLoc.temps = dataW.main.temp;
+  console.log(tempLoc)
+
 }
 
 const form = document.getElementById("form");
@@ -49,6 +54,36 @@ form.addEventListener("submit", (event) => {
   const limit = "5";
   let geoUrl = `http://api.openweathermap.org/geo/1.0/direct?q=${cityName},${state},${countryCode}&limit=${limit}&appid=${apiKey}`;
   getCityWeather(geoUrl);
+});
+
+// let obj = {name: "Cole", job: "none"}
+// let tempObj = new SelectedLocation("bham", "us", 75)
+
+class SelectedLocation {
+  constructor(city, country, temps){
+    this.city = city;
+    this.country = country;
+    this.temps = temps;
+  };
+
+  removeLocation(){};
+  // Removes card from selected area
+
+  // Do these functions derive from event listeners?
+};
+
+const body = document.getElementById("body");
+const save = document.getElementById("save");
+const favs = document.getElementById("favs");
+
+save.addEventListener("submit", (event) => {
+  event.preventDefault();
+  console.log("made it this far")
+  const saved = document.createElement("li");
+  let savedLoc = tempLoc;
+  console.log(savedLoc)
+  saved.textContent = `${savedLoc.city} ${savedLoc.country} ${savedLoc.temps}`;
+  favs.appendChild(saved);
 });
 
 // Eventual TODOs - choice of F, C, K temp units
