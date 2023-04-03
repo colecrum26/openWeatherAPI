@@ -1,6 +1,5 @@
 const apiKey = "5bfff3ebda0e0482eab8cdd3efecce1a";
 let tempLoc
-// TODO
 
 async function getCityWeather(geoUrl) {
   console.log(geoUrl);
@@ -12,15 +11,15 @@ async function getCityWeather(geoUrl) {
   let city = dataG[0].name;
   let st = dataG[0].state;
   let country = dataG[0].country;
-  let currentWeatherURL = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}`;
-  getCurrentWeather(currentWeatherURL);
+  let tempURL = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}`;
+  getCurrentWeather(tempURL);
   let cityEl = document.getElementById("city-name");
   cityEl.textContent = city;
   let stateEl = document.getElementById("state-name");
   stateEl.textContent = st;
   let countryEl = document.getElementById("country-name");
   countryEl.textContent = country;
-  tempLoc = new SelectedLocation(city, country)
+  tempLoc = new SelectedLocation(city, country, lat, lon);
 }
 
 async function getCurrentWeather(currentWeatherURL) {
@@ -36,9 +35,7 @@ async function getCurrentWeather(currentWeatherURL) {
   day1IconId.src = iconURL;
   let tempEl = document.getElementById("city-temps");
   tempEl.textContent = tempF;
-  tempLoc.temps = dataW.main.temp;
-  console.log(tempLoc)
-
+  tempLoc.temps = tempF;
 }
 
 const form = document.getElementById("form");
@@ -57,34 +54,39 @@ form.addEventListener("submit", (event) => {
   getCityWeather(geoUrl);
 });
 
-// let obj = {name: "Cole", job: "none"}
-// let tempObj = new SelectedLocation("bham", "us", 75)
-
 class SelectedLocation {
-  constructor(city, country, temps){
+  constructor(city, country, lat, lon){
     this.city = city;
     this.country = country;
-    this.temps = temps;
+    this.lat = lat;
+    this.lon = lon;
   };
-
-  removeLocation(){};
-  // Removes card from selected area
-
-  // Do these functions derive from event listeners?
 };
 
 const body = document.getElementById("body");
 const save = document.getElementById("save");
 const favs = document.getElementById("favs");
 
-save.addEventListener("submit", (event) => {
-  event.preventDefault();
-  console.log("made it this far")
+save.addEventListener("click", () => {
   const saved = document.createElement("li");
+  const refresh = document.createElement("button");
+  const remove = document.createElement("button");
+  refresh.textContent = "Refresh Weather";
+  remove.textContent = "Remove Location";
   let savedLoc = tempLoc;
-  console.log(savedLoc)
-  saved.textContent = `${savedLoc.city} ${savedLoc.country} ${savedLoc.temps}`;
+  let date = new Date();
+  let stamp = document.createElement("li");
+  refresh.addEventListener("click", () => {
+    let refreshURL = `https://api.openweathermap.org/data/2.5/weather?lat=${savedLoc.lat}&lon=${savedLoc.lon}&appid=${apiKey}`;
+    getCurrentWeather(refreshURL);
+  });
+  remove.addEventListener("click", () => {
+    favs.removeChild(saved);
+  })
+  saved.textContent = `${savedLoc.city}, ${savedLoc.country} ${savedLoc.temps}`;
   favs.appendChild(saved);
+  favs.appendChild(refresh);
+  favs.appendChild(remove);
 });
 
 // Eventual TODOs - choice of F, C, K temp units
