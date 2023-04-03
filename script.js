@@ -27,14 +27,15 @@ async function getCurrentWeather(currentWeatherURL) {
   let res = await fetch(currentWeatherURL);
   let dataW = await res.json();
   console.log(dataW)
-  let temp = dataW.main.temp;
+  let tempK = dataW.main.temp;
+  let tempF = ((tempK-273.15)*(9/5)+32).toFixed(0) + "\u00B0F";
   console.log(currentWeatherURL);
   let day1Icon = dataW.weather[0].icon;
   let iconURL = `https://openweathermap.org/img/wn/${day1Icon}@2x.png`;
   let day1IconId = document.getElementById("day1Icon");
   day1IconId.src = iconURL;
   let tempEl = document.getElementById("city-temps");
-  tempEl.textContent = temp;
+  tempEl.textContent = tempF;
   tempLoc.temps = dataW.main.temp;
   console.log(tempLoc)
 
